@@ -1,21 +1,30 @@
 
-terraform {
-  required_providers {
-    aws={
-        source = "hashicorp/aws"
-        version = "~>4.0"
-    }
-  }
+module "network_mod" {
+  source = "./modules/network"
+  vpc_cidr = var.vpc_cidr_range
+  subnet_cidr = var.subnet_cidr_range
+  providers = {
+    aws = aws.aws-india 
+   }
 }
 
-provider "aws" {
-  region = "ap-south-1"
+module "storage_mod" {
+  source = "./modules/storage"
+  bucket_name = var.s3_bucket_name
+  providers = {
+    aws = aws.aws-us 
+   }
 }
 
-resource "aws_instance" "ec2" {
-  ami = "ami-03d3eec31be6ef6f9"
-  instance_type = "t2.micro"
-  tags={
-    Name="App Server"
-  }  
+module "compute_mod" {
+  source = "./modules/compute"
+  server_count = var.server_count
+  image_id = var.server_image_id
+  instance_type = var.server_instance_type
+  subnet_id = module.network_mod.subnet_id
+  username = var.ec2_username
+  private_key = file("LinuxKey.pem")
+  providers = {
+    aws = aws.aws-india 
+   }
 }
