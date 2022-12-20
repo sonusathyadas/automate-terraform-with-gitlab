@@ -14,7 +14,7 @@ before_script:
   - rm -rf .terraform
   - terraform --version
   - terraform init
-  - terraform workspace select WORKSPACE_NAME || terraform workspace new WORKSPACE_NAME
+  - terraform workspace select ${WORKSPACE_NAME} || terraform workspace new ${WORKSPACE_NAME}
 validate:
   stage: validate
   script:
