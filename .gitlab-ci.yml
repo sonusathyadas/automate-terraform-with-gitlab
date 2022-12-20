@@ -10,9 +10,11 @@ image:
 before_script:
   - export AWS_ACCESS_KEY=${AWS_ACCESS_KEY_ID}
   - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  - export WORKSPACE_NAME=${TF_WORKSPACE_NAME}
   - rm -rf .terraform
   - terraform --version
   - terraform init
+  - terraform workspace select WORKSPACE_NAME || terraform workspace new WORKSPACE_NAME
 validate:
   stage: validate
   script:
@@ -20,7 +22,7 @@ validate:
 plan:
   stage: plan
   script:
-    - terraform plan -out "planfile"
+    - terraform plan --var-file "${WORKSPACE_NAME}.tfvars"  -out "planfile"
   dependencies:
     - validate
   artifacts:
@@ -29,7 +31,7 @@ plan:
 apply:
   stage: apply
   script:
-    - terraform apply -input=false "planfile"
+    - terraform apply --var-file "${WORKSPACE_NAME}.tfvars" -input=false "planfile"
   dependencies:
     - plan
   when: manual
