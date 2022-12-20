@@ -2,8 +2,8 @@
 terraform {
   required_providers {
     aws = {
-        source = "hashicorp/aws"
-        version = "~>4.0"
+      source  = "hashicorp/aws"
+      version = "~>4.0"
     }
   }
 
@@ -15,15 +15,15 @@ terraform {
 }
 
 provider "aws" {
-  profile = "default"
+  #   profile = "default"
   region = "ap-south-1"
-  alias = "aws-india"
+  alias  = "aws-india"
 }
 
 provider "aws" {
-  profile = "default"
+  #   profile = "default"
   region = "us-east-1"
-  alias = "aws-us"
+  alias  = "aws-us"
 }
 
 
